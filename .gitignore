@@ -1,0 +1,13 @@
+*.egg-info
+dist
+cover
+.coverage
+stage
+shared
+_site
+*.pyc
+.idea/
+*.bat
+build
+*.patch
+*.diff
