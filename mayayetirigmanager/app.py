@@ -95,32 +95,17 @@ class Window(QtWidgets.QWidget):
         self.disconnect_button.clicked.connect(self.disconnect_container_nodes)
 
     def on_rig_selection_changed(self):
-
-        node = self._get_rig_node()
-        if node is None:
-            self.match_view.clear_selection()
+        selection_model = self.rig_view.get_selection_model()
+        indices = selection_model.selectedIndexes()
+        if len(indices) != 1:
             return
+        index = indices[0]
 
-        linked_item = node.get("linkedItem", None)
-        if not linked_item or not linked_item.isValid():
-            self.match_view.clear_selection()
-            return
+        self.match_view.model.set_linked_index(index)
 
-        self.match_view.select_index(linked_item)
-
-    def on_match_selection_changed(self):
-
-        node = self._get_match_node()
-        if node is None:
-            self.rig_view.clear_selection()
-            return
-
-        linked_item = node.get("linkedItem", None)
-        if linked_item is None or not linked_item.isValid():
-            self.rig_view.clear_selection()
-            return
-
-        self.rig_view.select_index(linked_item)
+        # The font will only update the widget gets focus
+        self.match_view.setFocus()
+        self.rig_view.setFocus()
 
     def refresh(self):
 
@@ -225,9 +210,7 @@ class Window(QtWidgets.QWidget):
                     continue
                 self.log.info("Found connected items..")
 
-                rig_node.update({"linkedItem": match_index})
-                match_node.update({"linkedItem": rig_index})
-
+                match_node.update({"linkedIndex": [rig_index]})
                 break
 
     def _find_rig_node_index(self, label):
