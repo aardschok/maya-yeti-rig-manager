@@ -44,12 +44,6 @@ class AssetModel(model.TreeModel):
             node = index.internalPointer()
             return node
 
-        if role == CONNECTED_ROLE:
-            if index.column() == 0:
-                font = QtGui.QFont()
-                font.setItalic()
-                return font
-
         # Add icon
         if role == QtCore.Qt.DecorationRole:
             if index.column() == 0:
@@ -75,6 +69,13 @@ class MatchModel(AssetModel):
     """Model displaying a list of looks and matches for assets"""
 
     COLUMNS = ["label"]
+
+    def __init__(self, parent=None):
+        AssetModel.__init__(self, parent=parent)
+        self._linked_index = None
+
+    def set_linked_index(self, index):
+        self._linked_index = index
 
     def add_items(self, items):
         """Add items to model with needed data
@@ -102,3 +103,20 @@ class MatchModel(AssetModel):
             self.add_child(node)
 
         self.endResetModel()
+
+    def data(self, index, role):
+
+        # Set the connected item in italics
+        if role == QtCore.Qt.FontRole:
+            font = QtGui.QFont()
+            node = index.internalPointer()
+            if not self._linked_index:
+                return font
+
+            is_connected = self._linked_index in node.get("linkedIndex", [])
+            if is_connected:
+                font.setItalic(True)
+                font.setBold(True)
+            return font
+
+        return super(MatchModel, self).data(index, role)
