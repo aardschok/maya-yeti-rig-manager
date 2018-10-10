@@ -117,7 +117,6 @@ class Window(QtWidgets.QWidget):
 
         # Separate based on loader
         for container in lib.get_containers():
-
             node = lib.create_node(container)
             if node["loader"] == "YetiRigLoader":
                 rig_items.append(node)
@@ -126,6 +125,8 @@ class Window(QtWidgets.QWidget):
 
         self.rig_view.add_items(rig_items)
         self.match_view.add_items(match_items)
+
+        self.log.info("Refreshed ..")
 
         self._link_connected()
 
