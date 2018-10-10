@@ -15,7 +15,6 @@ module.window = None
 
 
 class Window(QtWidgets.QWidget):
-
     UserRole = QtCore.Qt.UserRole
 
     connected = QtCore.Signal(list)
@@ -90,33 +89,10 @@ class Window(QtWidgets.QWidget):
     def connections(self):
 
         self.rig_view.selection_changed.connect(self.on_rig_selection_changed)
-        self.match_view.selection_changed.connect(self.on_match_selection_changed)
 
         self.refresh_button.clicked.connect(self.refresh)
         self.connect_button.clicked.connect(self.connect_container_nodes)
         self.disconnect_button.clicked.connect(self.disconnect_container_nodes)
-
-        self.connected.connect(self.on_connect)
-        self.disconnected.connect(self.on_disconnect)
-
-    def on_connect(self, nodes):
-
-        rig_node = nodes[0]
-        match_node = nodes[1]
-
-        rig_idx = self._find_rig_node_index(rig_node["label"])
-        match_idx = self._find_match_node_index(match_node["label"])
-
-        rig_node.update({"linkedItem": match_idx})
-        match_node.update({"linkedItem": rig_idx})
-
-    def on_disconnect(self, nodes):
-
-        rig_node = nodes[0]
-        match_node = nodes[1]
-
-        rig_node.pop("linkedItem", None)
-        match_node.pop("linkedItem", None)
 
     def on_rig_selection_changed(self):
 
@@ -182,7 +158,7 @@ class Window(QtWidgets.QWidget):
 
         lib.connect(rig_members_by_id, input_members_by_id, connections, force)
 
-        self.connected.emit([rig_node, match_node])
+        self.refresh()
 
     def disconnect_container_nodes(self):
 
@@ -201,7 +177,7 @@ class Window(QtWidgets.QWidget):
 
         lib.disconnect(rig_members_by_id, input_members_by_id, connections)
 
-        self.disconnected.emit([rig_node, match_node])
+        self.refresh()
 
     def _get_rig_node(self):
         items = self.rig_view.get_selected_items()
