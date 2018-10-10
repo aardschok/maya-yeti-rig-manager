@@ -1,5 +1,3 @@
-import logging
-
 from avalon.vendor.Qt import QtWidgets, QtCore
 
 # TODO: expose this better in avalon core
@@ -221,4 +219,3 @@ class MatchOutliner(QtWidgets.QWidget):
         items = [d for d in datas if d is not None]  # filter Nones
 
         return items
-
