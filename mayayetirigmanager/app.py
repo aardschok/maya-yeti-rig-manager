@@ -23,7 +23,7 @@ class Window(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent=parent)
 
-        title = "Yeti Rig Manager 1.0.0 - [%s]" % lib.get_workfile()
+        title = "Yeti Rig Manager 1.1.0 - [%s]" % lib.get_workfile()
         geometry = (800, 400)
 
         self.log = logging.getLogger("Yeti Rig Manager")
