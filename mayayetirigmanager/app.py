@@ -23,7 +23,7 @@ class Window(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent=parent)
 
-        title = "Yeti Rig Manager 1.0.0 - [%s]" % lib.get_workfile()
+        title = "Yeti Rig Manager 1.1.0 - [%s]" % lib.get_workfile()
         geometry = (800, 400)
 
         self.log = logging.getLogger("Yeti Rig Manager")
@@ -113,7 +113,7 @@ class Window(QtWidgets.QWidget):
         self.match_view.clear()
 
         rig_items = []
-        match_items = []
+        other_items = []
 
         # Separate based on loader
         for container in lib.get_containers():
@@ -121,7 +121,10 @@ class Window(QtWidgets.QWidget):
             if node["loader"] == "YetiRigLoader":
                 rig_items.append(node)
             else:
-                match_items.append(node)
+                other_items.append(node)
+
+        match_items = lib.get_matches(rig_items, other_items)
+        print(match_items)
 
         self.rig_view.add_items(rig_items)
         self.match_view.add_items(match_items)

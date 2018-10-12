@@ -83,6 +83,56 @@ def create_nodes(containers):
     return [create_node(container) for container in containers]
 
 
+def get_source_ids(connections):
+    """Return a list of unique source Ids
+
+    Args:
+        connections(dict): connection data
+
+    Returns:
+        list
+
+    """
+    return list(set(c["sourceID"] for c in connections))
+
+
+def get_matches(rig_items, other_items):
+    """Yields each item which matches for a Yeti rig
+
+    The matching is based on the unique ID which is stored per
+    unique connection in the connection data of the rig.
+
+    Example of connection data:
+        {
+            "connections": ["worldMesh", "inMesh"],
+            "sourceID": "123456789012345:098765",
+            "destinationID: "098765432112345:123456"
+         }
+
+    Args:
+        rig_items (list): list of Yeti rig nodes, list of dicts
+        other_items (list): other items from scene, list of dicts
+
+    Returns:
+        generator object
+
+    """
+
+    # Get connection data per node
+    for node in rig_items:
+        metadata = get_connections(node["representation"])
+        connections = metadata["inputs"]
+
+        # Get the ids of the sources
+        source_ids = get_source_ids(connections)
+
+        # Get matches based on the ids
+        for other in other_items:
+            node_data = other["nodes"]
+            if any(_id for _id in source_ids if _id in node_data):
+                yield other
+
+
 def get_connections(representation_id):
     """Get the metadata file from the data base
 

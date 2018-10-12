@@ -10,8 +10,14 @@ matching content. By selecting a single item from both views the user is able
 to connect or disconnect the items.
 
 
-_Note:_
-Currently the matches are unfiltered and will display everything which is not a Yeti rig.
+The matching are based on the unique ID which is stored per unique connection in the connection data of the rig.
+
+    Example of connection data:
+        {
+            "connections": ["worldMesh", "inMesh"],
+            "sourceID": "123456789012345:098765",
+            "destinationID: "098765432112345:123456"
+         }
 
 
 ### Dependencies
